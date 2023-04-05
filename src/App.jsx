@@ -44,7 +44,7 @@ function App() {
         }
         // setLoginData(resi.data)
         // console.log(loginData)
-        const ress=await Axios.get(`http://localhost:5000/api/displayFriends/${res.data.id}`)
+        const ress=await Axios.get(`https://chatapp-com.onrender.com/api/displayFriends/${res.data.id}`)
         setMain(()=>ress.data.friends.map((friend)=><div onClick={(e)=>switchChats(e,friend.theirId,friend.friendName)} id={friend.theirId} className='flex flex-cols border-double border-2 p-3 rounded-full items-center gap-10 mt-6 border-slate-500'>
         <img className='rounded-full border-2 border-solid border-slate-700 w-10' src={pfp} alt='' /><div>{friend.friendName}</div>  
          </div>) ) 
