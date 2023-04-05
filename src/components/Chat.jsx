@@ -15,15 +15,15 @@ if(count!==props.id){
     setCount(props.id)
 }
 function counter() {
-    // console.log('show at ' + (iter++));
+    
     setCount((p)=>p++)
-    console.log(count)
+    
     setTimeout(counter, 1000);
 }
 
     const settingChats=async()=>{
         try {
-            const res=await Axios.get(`http://localhost:5000/api/chats/getMessages/${props.id}`,{headers:{Authorization: `Bearer ${props.token}`}},{ogId:ogId})
+            const res=await Axios.get(`https://chatapp-com.onrender.com/api/chats/getMessages/${props.id}`,{headers:{Authorization: `Bearer ${props.token}`}},{ogId:ogId})
         
             //  setChatState((p)=>res.data[0].messages.map((mssg)=>mssg.id!==props.id?<div className='my-2  text-right'><span className='bg-green-600 rounded-full py-1 m-4 px-2'>{mssg.message}</span></div>:<div className=' my-2'><span className='bg-green-800 rounded-full py-1  px-2'>{mssg.message}</span></div>))
         } catch (error) {
@@ -33,11 +33,11 @@ function counter() {
     useEffect(()=>{
         setChatState([])
           
-        const eventSource = new EventSourcePolyfill(`http://localhost:5000/api/chats/getMessages/${props.id}`,{headers:{Authorization:`Bearer ${props.token}`}})
+        const eventSource = new EventSourcePolyfill(`https://chatapp-com.onrender.com/api/chats/getMessages/${props.id}`,{headers:{Authorization:`Bearer ${props.token}`}})
         eventSource.onmessage = (event) => {
             try{
           const newMessages = event.data;
-          console.log('this ran')
+       
           setChatState(JSON.parse(newMessages));
                       
         setTimeout(()=>{
@@ -58,8 +58,8 @@ setInput(e.target.value)
     async function sendMssg(){
         document.getElementById('clear').value=''
         try {
-            // console.log()
-            const res=await Axios.post('http://localhost:5000/api/chats/sendMessage',{theirId:props.id,messages:{message:input}},{headers:{Authorization: `Bearer ${props.token}`}})
+        
+            const res=await Axios.post('https://chatapp-com.onrender.com/api/chats/sendMessage',{theirId:props.id,messages:{message:input}},{headers:{Authorization: `Bearer ${props.token}`}})
             
             // dummy.current.scrollIntoView({behavior:'smooth'})
            
@@ -84,15 +84,13 @@ setInput(e.target.value)
     )
 }
 
-// 
-{/* <div className=' '><span className='bg-green-800 rounded-full py-1 m-3 px-2'>hemloo</span></div>  */}
-// 
-{/* <div className='my-2 text-right'><span className='bg-green-600 rounded-full py-1 m-4 px-2'>asslamualiakum</span></div> */}
-{/* <div className='my-2 text-right'><span className='bg-green-600 rounded-full py-1 m-4 px-2'>asslamualiakum</span></div> */}
-{/* <div className='my-2 text-right'><span className='bg-green-600 rounded-full py-1 m-4 px-2'>asslamualiakum</span></div> */}
-{/* <div className='my-2 '><span className='bg-green-800 rounded-full py-1  px-2'>sup</span></div>  */}
-{/* <div className='my-2 text-right'><span className='bg-green-600 rounded-full py-1 m-4 px-2'>asslamualiakum</span></div> */}
-{/* <div className='my-2 '><span className='bg-green-800 rounded-full py-1 px-2'>sup</span></div>  */}
-{/* <div className='my-2 text-right'><span className='bg-green-600 rounded-full py-1 m-4 px-2'>asslamualiakum</span></div> */}
-{/* <div className='my-2 '><span className='bg-green-800 rounded-full py-1  px-2'>sup</span></div>  */}
-// 
+
+
+
+
+
+
+
+
+
+

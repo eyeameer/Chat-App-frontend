@@ -37,10 +37,10 @@ function App() {
       try {
         if(d.name){
           console.log('register ran')
-           res=await Axios.post('http://localhost:5000/api/register',d)
+           res=await Axios.post('https://chatapp-com.onrender.com/api/register',d)
         }
         else{
-         res=await Axios.post('http://localhost:5000/api/login',d)
+         res=await Axios.post('https://chatapp-com.onrender.com/api/login',d)
         }
         // setLoginData(resi.data)
         // console.log(loginData)
@@ -61,7 +61,7 @@ function App() {
   const [searching,setSearching]=useState(false)
   const [tempMain,setTempMain]=useState('')
   async function addFriend(ob){
-    const res=await Axios.post('http://localhost:5000/api/addFriend',ob)
+    const res=await Axios.post('https://chatapp-com.onrender.com/api/addFriend',ob)
 setSearching(false)
 console.log(res)
 setFriendArray(p=>{
@@ -99,7 +99,7 @@ setMain(()=>friendArray.map((friend)=><div onClick={(e)=>switchChats(e,friend.th
   }
   async function search(e){
     const number=e.target.parentElement.childNodes[0].value
-    const url=`http://localhost:5000/api/search/${number}`
+    const url=`https://chatapp-com.onrender.com/api/search/${number}`
 try{
   const user=await Axios.get(url)
   setTempMain(()=><div id={user.data._id} className='flex flex-cols border-double border-2 p-3 rounded-full items-center gap-10 mt-6 border-slate-500'>
@@ -148,29 +148,3 @@ loggingIn={(data)=>loggingIn(data)}
 }
 
 export default App
-{/* <div id='main'> */}
-{/* <div onClick={()=>setIsChat(p=>!p)} className='flex flex-cols border-double border-2 p-3 rounded-full items-center gap-10 mt-6 border-slate-500'> */}
-  {/* <img className='rounded-full border-2 border-solid border-slate-700 w-10' src={fg} alt="" /><div>zohru</div> */}
-{/* </div> */}
-{/* <div className='flex flex-cols border-double border-2 p-4 rounded-3xl items-center gap-10 mt-6 border-slate-500'> */}
-  {/* <img className='rounded-full border-2 border-solid border-slate-700 w-10' src={fg} alt="" /><div>zohra</div> */}
-{/* </div> */}
-{/* <div className='flex flex-cols border-double border-2 p-4 rounded-3xl items-center gap-10 mt-6 border-slate-500'> */}
-  {/* <img className='rounded-full border-2 border-solid border-slate-700 w-10' src={fg} alt="" /><div>zohrii</div> */}
-{/* </div> */}
-{/* <div className='flex flex-cols border-double border-2 p-4 rounded-3xl items-center gap-10 mt-6 border-slate-500'> */}
-  {/* <img className='rounded-full border-2 border-solid border-slate-700 w-10' src={fg} alt="" /><div>bestu</div> */}
-{/* </div> */}
-{/* <div className='flex flex-cols border-double border-2 p-4 rounded-3xl items-center gap-10 mt-6 border-slate-500'> */}
-  {/* <img className='rounded-full border-2 border-solid border-slate-700 w-10' src={fg} alt="" /><div>home</div> */}
-{/* </div> */}
-{/*    */}
-{/* </div> */}
-
-
-
-
-{/* {isChat?<Chat  */}
-// 
-// goBack={()=>goBack()}
-{/* />:''} */}
