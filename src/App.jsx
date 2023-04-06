@@ -40,7 +40,7 @@ function App() {
      
       window.removeEventListener("resize", watchWidth)
   }
-}, [])
+}, [friendArray])
   // const [userTrue,setUserTrue]=useState({})
   const [friendArray,setFriendArray]=useState([])
   async function loggingIn(d){
