@@ -19,11 +19,15 @@ function App() {
  const friendsDiv=useRef(null)
  const rightChatDiv=useRef(null)
  let tempp
- let testu
+ 
  const loadingChange=()=>{
   setIsLoading(false)
  }
  useEffect(() => {
+ 
+ 
+ 
+
   function watchWidth() {
   
       setWindowWidth(window.innerWidth)
@@ -45,7 +49,7 @@ function App() {
    let res
       try {
         if(d.name){
-          console.log('register ran')
+          
            res=await Axios.post('https://chatapp-com.onrender.com/api/register',d)
         }
         else{
@@ -58,8 +62,11 @@ function App() {
         <img className='rounded-full border-2 border-solid border-slate-700 w-10' src={pfp} alt='' /><div>{friend.friendName}</div>  
          </div>) ) 
         setFriendArray(()=>ress.data.friends)
-        setLoginData(()=>res.data)
-        testu=res.data
+        // console.log(res.data)
+        localStorage.setItem('token', res.data.token);
+     
+       
+  setLoginData(res.data)
         setIsLoggedIn(p=>!p)
         setIsLoading(false)
       } catch (error) {
@@ -73,6 +80,7 @@ function App() {
   async function addFriend(ob){
     setIsLoading(true)
     const res=await Axios.post('https://chatapp-com.onrender.com/api/addFriend',ob)
+  
 setSearching(false)
 
 setFriendArray(p=>{
@@ -101,7 +109,8 @@ setMain(()=>friendArray.map((friend)=><div onClick={(e)=>switchChats(e,friend.th
      
     setIsChat(true)
     }
-   
+   try{
+    const token=localStorage.getItem('token')
     setChat(()=>{
     setIsLoading(true)
     return <Chat
@@ -111,9 +120,14 @@ setMain(()=>friendArray.map((friend)=><div onClick={(e)=>switchChats(e,friend.th
     name={name}
     goBack={goBack}
     connectDB={(url)=>connectDB(url)}
-    token={testu.token}
+    token={token}
     />})
     
+   }
+  
+   catch(error){
+    console.log(error)
+   }
   }
   async function search(e){
     setIsLoading(true)
@@ -141,7 +155,7 @@ return(
 
 <div className={isChat?"":'bg-blue-900 w-full h-screen grid grid-cols-4'}>
 
-<div className={isChat?'':'bg-blue-200 h-screen overflow-y-hidden sm:col-span-1 w-full col-span-4'}>
+<div className={isChat?'':'bg-blue-200 h-screen pb-2 overflow-y-auto scrollbar-hide sm:col-span-1 w-full col-span-4'}>
 {isChat===false &&
 (<div>
   <div className='grid mx-2 pt-2 grid-cols-3 content-center'><input className='px-4 bg-slate-500 text-white py-2 rounded-3xl col-span-2' type="text" placeholder='search'/><button onClick={(e)=>search(e)} className='col-span-1'>{searching?"cancel":"search"}</button></div>
@@ -156,7 +170,7 @@ return(
 </div>)
 }
 
-<div ref={friendsDiv}>
+<div ref={friendsDiv} >
 {(isLoading && windowWidth<640 )  && <Loading div={friendsDiv}/>}
 {isChat && windowWidth<640?
 chat  :

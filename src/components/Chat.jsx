@@ -4,9 +4,10 @@ import Axios from 'axios'
 import pfp from '../assets/Screenshot_20230327_201324_Gallery.png'
 import { EventSourcePolyfill } from 'event-source-polyfill';
 export default function Chat(props){
-    
-    console.log("changed?")
+   
+  
     const [input,setInput]=useState('')
+
     let ogId
     const [chatState,setChatState]=useState([])
     const [count,setCount]=useState(props.id)
@@ -26,46 +27,61 @@ function counter() {
         try {
             const res=await Axios.get(`https://chatapp-com.onrender.com/api/chats/getMessages/${props.id}`,{headers:{Authorization: `Bearer ${props.token}`}},{ogId:ogId})
         
-            //  setChatState((p)=>res.data[0].messages.map((mssg)=>mssg.id!==props.id?<div className='my-2  text-right'><span className='bg-green-600 rounded-full py-1 m-4 px-2'>{mssg.message}</span></div>:<div className=' my-2'><span className='bg-green-800 rounded-full py-1  px-2'>{mssg.message}</span></div>))
+           
         } catch (error) {
             console.log(error)
         }
     }
+
+function test(){
+    let eventSource
+    try{
+        eventSource = new EventSourcePolyfill(`https://chatapp-com.onrender.com/api/chats/getMessages/${props.id}`,{headers:{Authorization:`Bearer ${props.token}`}})
+      
+       eventSource.onmessage = (event) => {
+           
+               
+         const newMessages = event.data;
+    
+         setChatState(JSON.parse(newMessages));
+         props.loadingChange()
+                   //   
+       setTimeout(()=>{
+           dummy.current.scrollIntoView({behavior:'smooth'})
+       },400)
+         }}
+       catch(error){
+          
+           console.log(error)
+       }
+       ;
+      
+             return () => {
+               eventSource.close();
+             };            
+}
+
     useEffect(()=>{
         
         setChatState([])
-       
-        const eventSource = new EventSourcePolyfill(`https://chatapp-com.onrender.com/api/chats/getMessages/${props.id}`,{headers:{Authorization:`Bearer ${props.token}`}})
-        eventSource.onmessage = (event) => {
-            try{
-                
-          const newMessages = event.data;
-       
-          setChatState(JSON.parse(newMessages));
-          props.loadingChange()
-                    //   
-        setTimeout(()=>{
-            dummy.current.scrollIntoView({behavior:'smooth'})
-        },400)}
-        catch(error){
-            console.log(error)
-        }
-        };
-        
-              return () => {
-                eventSource.close();
-              };            
+test()
     },[count])
 
     const mssgBox=(e)=>{
 setInput(e.target.value)
     }
     async function sendMssg(){
+ 
+ 
+
+ 
         document.getElementById('clear').value=''
         try {
         
             const res=await Axios.post('https://chatapp-com.onrender.com/api/chats/sendMessage',{theirId:props.id,messages:{message:input}},{headers:{Authorization: `Bearer ${props.token}`}})
-            
+            if(chatState[0].id==='unknown'){
+                test()
+            }
             // dummy.current.scrollIntoView({behavior:'smooth'})
            
         } catch (error) {
@@ -80,7 +96,7 @@ setInput(e.target.value)
 </div>
            <div id='messages' className=' m-5 grid grid-rows flex-grow-1'>
 
-            {chatState.map((mssg)=>mssg.id!==props.id?<div > <ul className='my-2 text-right'><li className='inline-block bg-green-600 rounded-2xl  py-1  px-2'>{mssg.message}</li></ul> </div>:<ul className=' my-2'><li className='inline-block bg-green-800 rounded-full py-1  px-2'>{mssg.message}</li></ul>)}
+            {chatState.map((mssg)=>mssg.id==='unknown'?<div className='w-full'> <ul className='my-2 w-full flex justify-center '><li className='inline-block bg-green-900 rounded-2xl  py-1  px-2'>{mssg.message}</li></ul> </div>:mssg.id!==props.id?<div > <ul className='my-2 text-right'><li className='inline-block bg-green-600 rounded-2xl  py-1  px-2'>{mssg.message}</li></ul> </div>:<ul className=' my-2'><li className='inline-block bg-green-800 rounded-full py-1  px-2'>{mssg.message}</li></ul>)}
             <div ref={dummy}></div>
             
  </div >
