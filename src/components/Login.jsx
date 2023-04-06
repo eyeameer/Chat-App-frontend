@@ -1,10 +1,13 @@
-import { useState,useEffect } from "react"
+import { useState,useEffect, useRef } from "react"
 import React from "react";
 import  Axios  from "axios"
+import Loading from "./Loading";
 export default function Login(props){
     const [clicked,setClicked]=useState(false)
     const clickedRef = React.createRef();
     const [userStatus,setUserStatus]=useState(false)
+    const loginDiv=useRef(null)
+    const [isLoadingLogin,setIsLoadingLogin]=useState(false)
 clickedRef.current = clicked;
 const loginInfo={}
 const login= <div className="text-white flex  justify-center items-center bg-slate-700 h-screen w-full">
@@ -19,8 +22,16 @@ const login= <div className="text-white flex  justify-center items-center bg-sla
     <button  className="bg-sky-600 mt-3 rounded-3xl py-2">Login</button>
 </form>
 </div>
+// useEffect(()=>{
+    // if(props.isLoading===true){
+// setIsLoadingLogin(true)
+    // }}
+// ,[])
     return(
-    userStatus? login: <div className="text-white flex  justify-center items-center bg-slate-700 h-screen w-full">
+        <div ref={loginDiv}  className="min-h-screen">
+            {props.isLoading && <Loading div={loginDiv}/>}
+    {userStatus? login: <div className="text-white flex  justify-center items-center bg-slate-700 h-screen w-full">
+        
                 <form onSubmit={(e)=>{
     e.preventDefault()
     props.loggingIn(loginInfo)
@@ -35,6 +46,7 @@ const login= <div className="text-white flex  justify-center items-center bg-sla
     <div>Already registered? Login <a onClick={()=>setUserStatus(true)} className="text-blue-300 underline cursor-pointer">here</a></div>
 </form>
        </div>
-
+}
+       </div>
     )
 }

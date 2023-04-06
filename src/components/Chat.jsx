@@ -4,6 +4,7 @@ import Axios from 'axios'
 import pfp from '../assets/Screenshot_20230327_201324_Gallery.png'
 import { EventSourcePolyfill } from 'event-source-polyfill';
 export default function Chat(props){
+    
     console.log("changed?")
     const [input,setInput]=useState('')
     let ogId
@@ -27,19 +28,22 @@ function counter() {
         
             //  setChatState((p)=>res.data[0].messages.map((mssg)=>mssg.id!==props.id?<div className='my-2  text-right'><span className='bg-green-600 rounded-full py-1 m-4 px-2'>{mssg.message}</span></div>:<div className=' my-2'><span className='bg-green-800 rounded-full py-1  px-2'>{mssg.message}</span></div>))
         } catch (error) {
-            // console.log(error)
+            console.log(error)
         }
     }
     useEffect(()=>{
+        
         setChatState([])
-          
+       
         const eventSource = new EventSourcePolyfill(`https://chatapp-com.onrender.com/api/chats/getMessages/${props.id}`,{headers:{Authorization:`Bearer ${props.token}`}})
         eventSource.onmessage = (event) => {
             try{
+                
           const newMessages = event.data;
        
           setChatState(JSON.parse(newMessages));
-                      
+          props.loadingChange()
+                    //   
         setTimeout(()=>{
             dummy.current.scrollIntoView({behavior:'smooth'})
         },400)}
@@ -47,6 +51,7 @@ function counter() {
             console.log(error)
         }
         };
+        
               return () => {
                 eventSource.close();
               };            
@@ -64,6 +69,7 @@ setInput(e.target.value)
             // dummy.current.scrollIntoView({behavior:'smooth'})
            
         } catch (error) {
+            console.log(error)
         }
     }
     return(
