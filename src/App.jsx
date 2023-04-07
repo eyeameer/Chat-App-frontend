@@ -6,6 +6,7 @@ import pfp from './assets/Screenshot_20230327_201324_Gallery.png'
 import Login from './components/Login'
 import Loading from './components/Loading'
 function App() {
+  const [friendArray,setFriendArray]=useState([])
   const [isChat,setIsChat]=useState(false)
   const [searchReturn,setSearchReturn]=useState({})
   const [chat,setChat]=useState(<div></div>)
@@ -16,6 +17,7 @@ function App() {
  const [isLoading,setIsLoading]=useState(false)
  const [windowWidth,setWindowWidth]=useState(window.innerWidth)
  const [invalidCredentials,setinvalidCredentials]=useState(false)
+
  const appDiv=useRef(null)
  const friendsDiv=useRef(null)
  const rightChatDiv=useRef(null)
@@ -43,7 +45,7 @@ function App() {
   }
 }, [])
   // const [userTrue,setUserTrue]=useState({})
-  const [friendArray,setFriendArray]=useState([])
+  
   async function loggingIn(d){
     setIsLoading(true)
    
@@ -97,8 +99,8 @@ setFriendArray(p=>{
       theirId:res.data.theirId
     }
   )
-  const t=p
-  return[...t]
+  // const t=p
+  return [...p]
 })
 setIsLoading(false)
 setMain(()=>friendArray.map((friend)=><div onClick={(e)=>switchChats(e,friend.theirId,friend.friendName)} id={friend.theirId} className='flex flex-cols border-double border-2 p-3 rounded-full items-center gap-10 mt-6 border-slate-500'>
