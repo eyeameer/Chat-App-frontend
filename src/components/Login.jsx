@@ -47,7 +47,7 @@ const login= <div className="text-white flex flex-col  justify-center items-cent
     <div>Already registered? Login <a onClick={()=>setUserStatus(true)} className="text-blue-300 underline cursor-pointer">here</a></div>
     
 </form>
-
+{props.invalidCredentials && (<div className="text-red-600 text-center">Invalid credentials! <br /><span> please enter valid credentials</span></div>)}
        </div>
 }
 
