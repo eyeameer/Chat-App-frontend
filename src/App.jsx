@@ -15,6 +15,7 @@ function App() {
  const [main,setMain]=useState(<div></div>)
  const [isLoading,setIsLoading]=useState(false)
  const [windowWidth,setWindowWidth]=useState(window.innerWidth)
+ const [invalidCredentials,setinvalidCredentials]=useState(false)
  const appDiv=useRef(null)
  const friendsDiv=useRef(null)
  const rightChatDiv=useRef(null)
@@ -70,7 +71,11 @@ function App() {
         setIsLoggedIn(p=>!p)
         setIsLoading(false)
       } catch (error) {
+        setIsLoading(false)
         console.log(error)
+        
+          setinvalidCredentials(true)
+        
       }
   
   }
@@ -184,6 +189,7 @@ tempp}
  {chat}
 </div>)}
 </div>: <Login
+invalidCredentials={invalidCredentials}
 isLoading={isLoading}
 loggingIn={(data)=>loggingIn(data)}
 />

@@ -10,7 +10,7 @@ export default function Login(props){
     const [isLoadingLogin,setIsLoadingLogin]=useState(false)
 clickedRef.current = clicked;
 const loginInfo={}
-const login= <div className="text-white flex  justify-center items-center bg-slate-700 h-screen w-full">
+const login= <div className="text-white flex flex-col  justify-center items-center bg-slate-700 h-screen w-full">
 <form onSubmit={(e)=>{
     e.preventDefault()
     props.loggingIn(loginInfo)
@@ -21,6 +21,7 @@ const login= <div className="text-white flex  justify-center items-center bg-sla
     <input  onChange={(e)=>loginInfo.password=e.target.value}  className="text-black" type="password" id='passwordIn'/>
     <button  className="bg-sky-600 mt-3 rounded-3xl py-2">Login</button>
 </form>
+{props.invalidCredentials && (<div className="text-red-600 text-center">Invalid credentials! <br /><span> please check your number and password again</span></div>)}
 </div>
 // useEffect(()=>{
     // if(props.isLoading===true){
@@ -30,7 +31,7 @@ const login= <div className="text-white flex  justify-center items-center bg-sla
     return(
         <div ref={loginDiv}  className="min-h-screen">
             {props.isLoading && <Loading div={loginDiv}/>}
-    {userStatus? login: <div className="text-white flex  justify-center items-center bg-slate-700 h-screen w-full">
+    {userStatus? login: <div className="text-white flex flex-col  justify-center items-center bg-slate-700 h-screen w-full">
         
                 <form onSubmit={(e)=>{
     e.preventDefault()
@@ -44,9 +45,12 @@ const login= <div className="text-white flex  justify-center items-center bg-sla
     <input  onChange={(e)=>loginInfo.password=e.target.value}  className="text-black" type="password" id='passwordIn'/>
     <button  className="bg-sky-600 mt-3 rounded-3xl py-2">register</button>
     <div>Already registered? Login <a onClick={()=>setUserStatus(true)} className="text-blue-300 underline cursor-pointer">here</a></div>
+    
 </form>
+
        </div>
 }
+
        </div>
     )
 }
