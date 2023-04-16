@@ -4,12 +4,11 @@ import Axios from 'axios'
 import pfp from '../assets/Screenshot_20230327_201324_Gallery.png'
 import { EventSourcePolyfill } from 'event-source-polyfill';
 export default function Chat(props){
-   
-  
     const [input,setInput]=useState('')
 
     let ogId
     const [chatState,setChatState]=useState([])
+    
     const [count,setCount]=useState(props.id)
     const dummy=useRef()
     const clear=useRef()
@@ -43,7 +42,10 @@ function test(){
                
          const newMessages = event.data;
     
-         setChatState(JSON.parse(newMessages));
+         setChatState((p)=>{if(p!==JSON.parse(newMessages)){
+props.newMessagesUpdate()
+         }
+        return JSON.parse(newMessages)});
          props.loadingChange()
                    //   
        setTimeout(()=>{
@@ -92,7 +94,7 @@ setInput(e.target.value)
         // <div id={props.id} className=' bg-slate-700 text-white'>
             <div id={props.id} className='bg-slate-700 text-white flex flex-col min-h-screen'>
            <div className='flex  sticky flex-cols border-double border-2 p-3 bg-slate-700 rounded-full items-center gap-10  top-0 border-slate-500'>
- <div onClick={()=>props.goBack()} className='text-3xl pl-2 mt-1' ><ion-icon name="arrow-back-circle-outline"></ion-icon></div> <img className='rounded-full border-2 border-solid border-slate-700 w-10' src={pfp} alt="" /><div>{props.name}</div>
+ <div onClick={()=>props.goBack()} className='text-3xl pl-2 mt-1' ><ion-icon name="arrow-back-circle-outline"></ion-icon></div> <img className='rounded-full  border-2 border-solid border-slate-700 w-10' src={props.photo===null?pfp:`data:img/jpeg;base64,${props.photo}`} alt="" /><div>{props.name}</div>
 </div>
            <div id='messages' className=' m-5 grid grid-rows flex-grow-1'>
 
