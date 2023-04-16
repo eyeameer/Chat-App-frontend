@@ -26,6 +26,9 @@ function App() {
  const rightChatDiv=useRef(null)
  let tempp
  const serachBox=useRef()
+ function loadingSwitch(){
+  setIsLoading(!isLoading)
+ }
  function  newMessagesUpdate() {
   setNewMessages(true)
   
@@ -37,7 +40,7 @@ function App() {
   setIsLoading(false)
  }
  const changeIsloggedIn=async(data)=>{
-
+setIsLoading(false)
 
   // const res=await Axios.get(`http://localhost:5000/api/dowloadProfile/${localStorage.getItem('id')}`)
  
@@ -268,6 +271,7 @@ invalidCredentials={invalidCredentials}
 isLoading={isLoading}
 loggingIn={(data)=>loggingIn(data)}
 changeIsloggedIn={(data)=>changeIsloggedIn(data)}
+loadingSwitch={loadingSwitch}
 />
 }
 </div>

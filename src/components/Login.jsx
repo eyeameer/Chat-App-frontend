@@ -26,8 +26,9 @@ export default function Login(props){
       };
      
       async function postPfp(e){
+       
         e.preventDefault();
-        
+        props.loadingSwitch()
        
         const formData = new FormData();
         if(file){
@@ -49,10 +50,12 @@ export default function Login(props){
             const res=await Axios.post('https://chatapp-com.onrender.com/api/uploadProfile',formData, { headers: { "Content-Type": "multipart/form-data" } })
           
             props.changeIsloggedIn(res.data.photo)
+        
         } catch (error) {
+           
             console.log(error)
         }
-  
+       
        
         
         
