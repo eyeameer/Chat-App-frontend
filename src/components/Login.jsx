@@ -36,7 +36,7 @@ export default function Login(props){
         }
         formData.append('id',localStorage.getItem('id'))
     //    formData.append('file',pfp.current.files[0])
-        }
+        
         // const tt=pfp.current.files[0]
         // console.log(tt)
         // const newFormData={
