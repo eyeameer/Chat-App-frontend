@@ -11,7 +11,7 @@ export default function Chat(props){
     
     const [count,setCount]=useState(props.id)
     const dummy=useRef()
-    const clear=useRef()
+    const clear=useRef(null)
 if(count!==props.id){
     setCount(props.id)
 }
@@ -62,28 +62,39 @@ props.newMessagesUpdate()
                eventSource.close();
              };            
 }
+const handleEnterKey= e => {
+        
+    if (e.key === "Enter") {
+    sendMssg()
+    setInput('')
+}}
 
     useEffect(()=>{
-        
         setChatState([])
-test()
+        test()
+
+
     },[count])
 
     const mssgBox=(e)=>{
 setInput(e.target.value)
     }
     async function sendMssg(){
- 
- 
+        console.log(input)
+        // if (input.trim() === "") {
+        //     return;
+        //   }
 
- 
         document.getElementById('clear').value=''
+   
         try {
         
             const res=await Axios.post('https://chatapp-com.onrender.com/api/chats/sendMessage',{theirId:props.id,messages:{message:input}},{headers:{Authorization: `Bearer ${props.token}`}})
+            console.log(chatState[0].id)
             if(chatState[0].id==='unknown'){
                 test()
             }
+      
             // dummy.current.scrollIntoView({behavior:'smooth'})
            
         } catch (error) {
@@ -102,7 +113,7 @@ setInput(e.target.value)
             <div ref={dummy}></div>
             
  </div >
- <div className='bg-slate-700 z-50 sticky bottom-2 mt-auto content-center inline-flex w-full justify-center items-center'><input id='clear' ref={clear} onChange={(e)=>mssgBox(e)} type="text" placeholder='Message' className='w-11/12 rounded-full col-span-7 bg-slate-700 p-2 border-gray-400 border-2 '/><button onClick={(e)=>sendMssg()} className='border-2 border-slate-500 rounded-full pt-1 ml-2 px-3 text-2xl text-sky-500'><ion-icon name="send-outline"></ion-icon></button></div>
+ <div className='bg-slate-700 z-50 sticky bottom-2 mt-auto content-center inline-flex w-full justify-center items-center'><input id='clear' ref={clear}  type="text" placeholder='Message' onKeyDown={handleEnterKey} onChange={mssgBox} className='w-11/12 rounded-full col-span-7 bg-slate-700 p-2 border-gray-400 border-2 '/><button onClick={(e)=>sendMssg()} className='border-2 border-slate-500 rounded-full pt-1 ml-2 px-3 text-2xl text-sky-500'><ion-icon name="send-outline"></ion-icon></button></div>
  </div>
         // </div>
     )
