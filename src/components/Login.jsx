@@ -2,6 +2,7 @@ import { useState,useEffect, useRef } from "react"
 import React from "react";
 import  Axios  from "axios"
 import Loading from "./Loading";
+import PfpView from "./PfpView";
 import defaultPfp from '../assets/Screenshot_20230327_201324_Gallery.png'
 export default function Login(props){
     const [clicked,setClicked]=useState(false)
@@ -15,7 +16,24 @@ export default function Login(props){
     const formm=useRef()
     const pfp=useRef()
 
-    
+
+    function compArray(a1,a2){
+        // let t1=a1.map(Element=>Element*Element)
+        // let t2=a2.map(Element=>Element*Element)
+        let res=0
+       
+        a1.forEach(el=>{
+            if (a2.includes(el*el) ){
+                res=res+1
+            }
+            else{
+              res=0
+            }
+        })
+        return res===a1.length?true:false
+    }
+   console.log( compArray([1,9,4],[1,2,3]))
+
     const handleFileChange = (e) => {
         if (e.target.files.length > 0) {
           setPfpSelected(true);
@@ -138,6 +156,7 @@ const login= <div className="text-white flex flex-col  justify-center items-cent
         <div ref={loginDiv}  className="min-h-screen">
             {/* {pfpPage} */}
             {props.isLoading && <Loading div={loginDiv}/>}
+            {props.isPfpViewed && <PfpView div={loginDiv}/>}
 {userStatus? login: props.resIsBack?pfpPage:<div className="text-white flex flex-col  justify-center items-center bg-slate-700 h-screen w-full">
         
 <form onSubmit={(e)=>{

@@ -5,6 +5,7 @@ import Axios from "axios"
 import pfp from './assets/Screenshot_20230327_201324_Gallery.png'
 import Login from './components/Login'
 import Loading from './components/Loading'
+import PfpView from './components/PfpView'
 function App() {
   const [friendArray,setFriendArray]=useState([])
   const [isChat,setIsChat]=useState(false)
@@ -24,10 +25,15 @@ function App() {
  const appDiv=useRef(null)
  const friendsDiv=useRef(null)
  const rightChatDiv=useRef(null)
+ const [pfpValue,setPfpValue]=useState()
  let tempp
+ const [isPfpViewed,setIsPfpViewed]=useState(false)
  const serachBox=useRef()
  function loadingSwitch(){
   setIsLoading(!isLoading)
+ }
+ function changePfpView(){
+  setIsPfpViewed(!isPfpViewed)
  }
  function  newMessagesUpdate() {
   setNewMessages(true)
@@ -113,8 +119,11 @@ setIsLoading(false)
         // setLoginData(resi.data)
         // console.log(loginData)
         const ress=await Axios.get(`https://chatapp-com.onrender.com/api/displayFriends/${res.data.id}`)
-        setMain(()=>ress.data.friends.map((friend)=><div  key={friend.theirId} onClick={(e)=>switchChats(e,friend.theirId,friend.friendName,friend.photo)} id={friend.theirId} className='flex flex-cols border-double border-2 p-3 rounded-full items-center gap-10 mt-6 border-slate-500'>
-        <img className='rounded-full border-2 border-solid border-slate-700 w-10' src={friend.photo?`data:image/jpeg;base64,${friend.photo}`:pfp} alt='' /><div>{friend.friendName}</div>  
+        setMain(()=>ress.data.friends.map((friend)=><div  key={friend.theirId} onClick={(e)=>switchChats(e,friend.theirId,friend.friendName,friend.photo)}   id={friend.theirId} className='flex flex-cols border-double border-2 p-3 rounded-full items-center gap-10 mt-6 border-slate-500'>
+        <img onClick={(e)=>{
+          e.stopPropagation()
+         pfpValuePassing(friend.photo?`data:image/jpeg;base64,${friend.photo}`:pfp)
+          }} className='rounded-full border-2 border-solid border-slate-700 w-10' src={friend.photo?`data:image/jpeg;base64,${friend.photo}`:pfp} alt='' /><div>{friend.friendName}</div>  
         <div className='relative pb-1 px-3 rounded-xl text-white mr-1 ml-auto '> 
  {newMessages && (<div className='absolute top-0 right-0'> <span class="relative flex h-3 w-3">
  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
@@ -138,6 +147,10 @@ setIsLoading(false)
         
       }
   
+  }
+  function pfpValuePassing(value){
+    setPfpValue(()=>value)
+    setIsPfpViewed(true)
   }
   
   const [searching,setSearching]=useState(false)
@@ -171,7 +184,10 @@ setIsLoading(false)
    setIsLoading(false)
    
    setMain(()=>ress.data.friends.map((friend)=><div key={friend.theirId} onClick={(e)=>switchChats(e,friend.theirId,friend.friendName,friend.photo)} id={friend.theirId} className='flex flex-cols border-double border-2 p-3 rounded-full items-center gap-10 mt-6 border-slate-500'>
-   <img ref={pfpTag} className='rounded-full border-2 border-solid border-slate-700 w-10' src={friend.photo?`data:image/jpeg;base64,${friend.photo}`:pfp} alt='' /><div>{friend.friendName}</div>  
+   <img onClick={()=>{
+          pfpValuePassing(friend.photo?`data:image/jpeg;base64,${friend.photo}`:pfp)
+          }} 
+    ref={pfpTag} className='rounded-full border-2 border-solid border-slate-700 w-10' src={friend.photo?`data:image/jpeg;base64,${friend.photo}`:pfp} alt='' /><div>{friend.friendName}</div>  
     </div>) ) 
  } catch (error) {
   console.log(error)}
@@ -195,6 +211,9 @@ setIsLoading(false)
     newMessages={newMessages}
     isLoading={isLoading}
     loadingChange={()=>loadingChange()}
+    changePfpView={changePfpView}
+    isPfpViewed={isPfpViewed}
+    pfpValuePassing={(value)=>pfpValuePassing(value)}
     id={id}
     name={name}
     goBack={goBack}
@@ -221,7 +240,12 @@ try{
   const user=await Axios.get(url)
   
   setTempMain(()=><div id={user.data._id} className='flex flex-cols border-double border-2 p-3 rounded-full items-center gap-10 mt-6 border-slate-500'>
-     <img className='rounded-full border-2 border-solid border-slate-700 w-10 ' src={user.data.Photo?`data:image/jpeg;base64,${user.data.Photo}`:pfp} alt="" /><div>{user.data.name}</div><button onClick={()=>addFriend({myName:loginData.name,theirName:user.data.name,myId:loginData.id,theirId:user.data._id})} className=" text-white bg-slate-600 ml-auto px-2 py-1 rounded-lg" >Add</button>
+     <img  onClick={(event)=>{
+          event.stopPropagation()
+          pfpValuePassing(user.data.Photo?`data:image/jpeg;base64,${user.data.Photo}`:pfp)
+          
+          }} 
+     className='rounded-full border-2 border-solid border-slate-700 w-10 ' src={user.data.Photo?`data:image/jpeg;base64,${user.data.Photo}`:pfp} alt="" /><div>{user.data.name}</div><button onClick={()=>addFriend({myName:loginData.name,theirName:user.data.name,myId:loginData.id,theirId:user.data._id})} className=" text-white bg-slate-600 ml-auto px-2 py-1 rounded-lg" >Add</button>
   </div>)
 }
 
@@ -235,6 +259,7 @@ setSearching(p=>!p)
 tempp=searching?tempMain:main
 return(
   <div ref={appDiv}>
+   {isPfpViewed && <PfpView div={appDiv} photo={pfpValue} changePfpView={changePfpView}/>}
     {isLoading && <Loading div={appDiv}/>}
 {isLoggedIn? 
 
@@ -245,7 +270,11 @@ return(
 (<div>
   <div className='grid mx-2 pt-2 grid-cols-3 content-center'><input ref={serachBox} className='px-4  bg-slate-500 text-white py-2 rounded-3xl col-span-2' type="text" placeholder='search'/><button onClick={(e)=>search(e)} className='col-span-1'>{searching?"cancel":"search"}</button></div>
   {!searching && <div  id={localStorage.getItem('id')} className='flex flex-cols mb-4 border-double border-4 p-3 rounded-full items-center gap-10 mt-6 border-slate-500'>
-   <img className='rounded-full border-2 border-solid border-slate-700 w-10' src={localStorage.getItem('photo')==="defaultPfp"?pfp:`data:image/jpeg;base64,${localStorage.getItem('photo')}`} alt='' /><div>{localStorage.getItem('name')} (you)</div>  
+   <img
+   onClick={()=>{
+ pfpValuePassing(localStorage.getItem('photo')==="defaultPfp"?pfp:`data:image/jpeg;base64,${localStorage.getItem('photo')}`)
+    }} 
+   className='rounded-full border-2 border-solid border-slate-700 w-10' src={localStorage.getItem('photo')==="defaultPfp"?pfp:`data:image/jpeg;base64,${localStorage.getItem('photo')}`} alt='' /><div>{localStorage.getItem('name')} (you)</div>  
     </div>}
   <div className='flex'><h3 className='pl-2 text-blue-900 text-3xl font-bold'>Freinds:</h3>
 </div>
@@ -269,9 +298,11 @@ tempp}
 resIsBack={resIsBack}
 invalidCredentials={invalidCredentials}
 isLoading={isLoading}
+isPfpViewed={isPfpViewed}
 loggingIn={(data)=>loggingIn(data)}
 changeIsloggedIn={(data)=>changeIsloggedIn(data)}
 loadingSwitch={loadingSwitch}
+
 />
 }
 </div>
